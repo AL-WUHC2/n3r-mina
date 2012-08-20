@@ -13,6 +13,7 @@ import org.n3r.mina.bean.JCMessageHead;
 public class JCMessageUtils {
 
     public static byte[] messageToBytes(JCMessage message, StringBuilder printer) {
+        if (message == null) return RByte.toBytes((short) 0);
         return messageToBytes(message.getHead(), message.getBody(), printer);
     }
 
