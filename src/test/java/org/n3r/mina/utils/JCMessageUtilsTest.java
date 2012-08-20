@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.n3r.beanbytes.ParseBean;
+import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RHex;
 import org.n3r.mina.bean.JCMessage;
 import org.n3r.mina.bean.JCMessageHead;
@@ -40,11 +41,13 @@ public class JCMessageUtilsTest {
         byte[] expected = add(toBytes("20120813150412345678"), toBytes((byte) 0),
                 toBytes((short) 0), prependLen(toBytes("提供商", "UTF-16LE"), 1),
                 RHex.decode("001213"), RHex.decode("00"), toBytes((short) 0));
+        expected = BeanBytesUtils.prependLen(expected, 2);
 
         assertArrayEquals(expected, actual);
         assertEquals("{sessionId:20120813150412345678, typeFlag:00}" +
                 "{result:0000, merchantName:提供商, enableSpace:001213, userFlag:00, appList:[]}", printer.toString());
 
+        actual = subBytes(actual, 2);
         ParseBean<JCMessage> messageFromBytes = JCMessageUtils.rspMessageFromBytes(actual, "01");
         assertEquals(new JCMessage(head, body), messageFromBytes.getBean());
     }
@@ -86,6 +89,7 @@ public class JCMessageUtilsTest {
                 RHex.decode("0022"), RHex.decode("08"), prependLen(toBytes("提供商二", "UTF-16LE"), 1),
                 prependLen(toBytes("I002"), 1), prependLen(RHex.decode("0FFE"), 1));
         expected = add(expected, prependLen(add(app1Bytes, app2Bytes), 2, 2));
+        expected = BeanBytesUtils.prependLen(expected, 2);
 
         assertArrayEquals(expected, actual);
         assertEquals("{sessionId:20120813150412345678, typeFlag:00}{result:0000, appList:[" +
@@ -94,6 +98,7 @@ public class JCMessageUtilsTest {
                 "{appName:应用二, appAid:10000002, appSize:0022, appOperateType:08, " +
                 "provider:提供商二, productId:I002, feeDesc:0FFE}]}", printer.toString());
 
+        actual = subBytes(actual, 2);
         ParseBean<JCMessage> messageFromBytes = JCMessageUtils.rspMessageFromBytes(actual, "03");
         assertEquals(new JCMessage(head, body), messageFromBytes.getBean());
     }
@@ -110,10 +115,12 @@ public class JCMessageUtilsTest {
         byte[] actual = JCMessageUtils.messageToBytes(new JCMessage(head, body), printer);
 
         byte[] expected = add(toBytes("20120813150412345678"), toBytes((byte) 0), toBytes((short) 0));
+        expected = BeanBytesUtils.prependLen(expected, 2);
 
         assertArrayEquals(expected, actual);
         assertEquals("{sessionId:20120813150412345678, typeFlag:00}{result:0000}", printer.toString());
 
+        actual = subBytes(actual, 2);
         ParseBean<JCMessage> messageFromBytes = JCMessageUtils.rspMessageFromBytes(actual, "04");
         assertEquals(new JCMessage(head, body), messageFromBytes.getBean());
     }
@@ -132,10 +139,12 @@ public class JCMessageUtilsTest {
         byte[] actual = JCMessageUtils.messageToBytes(message, printer);
 
         byte[] expected = add(toBytes("20120813150412345678"), toBytes((byte) 3));
+        expected = BeanBytesUtils.prependLen(expected, 2);
 
         assertArrayEquals(expected, actual);
         assertEquals("{sessionId:20120813150412345678, typeFlag:03}{}", printer.toString());
 
+        actual = subBytes(actual, 2);
         ParseBean<JCMessage> messageFromBytes = JCMessageUtils.reqMessageFromBytes(actual);
         JCMessage fromMessage = messageFromBytes.getBean();
         assertEquals(head.getSessionId(), fromMessage.getHead().getSessionId());
