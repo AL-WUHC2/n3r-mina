@@ -1,5 +1,6 @@
 package org.n3r.mina.client.process;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import org.n3r.mina.bean.JCMessageHead;
 import org.n3r.mina.utils.JCTypeUtils;
 import org.phw.core.lang.Collections;
 import org.phw.ibatis.engine.PDao;
+
+import com.ailk.mall.base.utils.StringUtils;
 
 public abstract class JCClientProcess {
 
@@ -27,6 +30,11 @@ public abstract class JCClientProcess {
 
     public JCMessage process(JCMessage message, JCSession jcSession) throws Exception {
         Map insertParam = fetchInsertParam(message);
+
+        String seqId = StringUtils.toString(dao.selectMap("JCClientSQL.getSeq", new HashMap()).get("SEQ"));
+        insertParam.put("ID", seqId);
+        insertParam.put("SESSIONID", jcSession.getSessionId());
+        insertParam.put("IF_NO", ifNo);
 
         recordResponseInfo(insertParam);
 
