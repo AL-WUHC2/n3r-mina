@@ -9,10 +9,16 @@ import org.n3r.core.lang.RStr;
 import org.n3r.mina.bean.JCMessage;
 import org.n3r.mina.bean.req.IF1ReqBody;
 import org.n3r.mina.utils.JCMessageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
 
 public abstract class JCHandler implements IoHandler {
 
     private HashMap<Long, JCSession> sessionInfoMap = new HashMap<Long, JCSession>();
+
+    private static Logger logger = LoggerFactory.getLogger(JCHandler.class);
 
     public void newSessionInfo(IoSession session) {
         sessionInfoMap.put(session.getId(), new JCSession());
@@ -61,6 +67,8 @@ public abstract class JCHandler implements IoHandler {
 
     protected void jcSessionCreated(JCSession jcSession, byte[] msg) {
         JCMessage reqMessage = JCMessageUtils.reqMessageFromBytes(msg).getBean();
+
+        logger.info("Session Created Message: " + JSON.toJSONString(reqMessage));
 
         jcSession.setSessionId(reqMessage.getHead().getSessionId());
 

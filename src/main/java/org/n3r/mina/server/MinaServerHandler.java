@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSON;
 public class MinaServerHandler extends JCServerHandler {
 
     private final static String SQL_XML = "org/n3r/mina/server/JCServerSQL.xml";
-    private static PDao dao = PDaoEngines.getDao(SQL_XML, "EcsStore");
+    private static PDao dao = PDaoEngines.getDao(SQL_XML, "Eop");
 
     private static Logger logger = LoggerFactory.getLogger(MinaServerHandler.class);
 
@@ -56,7 +56,7 @@ public class MinaServerHandler extends JCServerHandler {
 
         StringBuilder printer = new StringBuilder();
         byte[] result = JCMessageUtils.messageToBytes(head, body, printer);
-        logger.info(printer.toString());
+        logger.info("Server Message: " + printer.toString());
 
         return result;
     }
