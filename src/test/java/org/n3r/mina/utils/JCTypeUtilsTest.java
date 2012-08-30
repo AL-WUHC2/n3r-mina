@@ -12,7 +12,7 @@ public class JCTypeUtilsTest {
     public void test1() {
         assertNotNull(new JCTypeUtils());
 
-        assertEquals("IF1", getTypeIFString("00"));
-        assertEquals("00", getType("IF1"));
+        assertEquals("IF1", getMsgTypeIFString("00"));
+        assertEquals("00", getMsgType("IF1"));
     }
 }

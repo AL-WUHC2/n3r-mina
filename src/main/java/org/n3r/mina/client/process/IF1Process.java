@@ -2,7 +2,7 @@ package org.n3r.mina.client.process;
 
 import java.util.Map;
 
-import org.n3r.mina.JCSession;
+import org.n3r.core.lang.RStr;
 import org.n3r.mina.bean.JCMessage;
 import org.n3r.mina.bean.JCMessageHead;
 import org.n3r.mina.bean.rsp.IF101RspBody;
@@ -28,7 +28,7 @@ public class IF1Process extends JCClientProcess {
                     body.getMerchantName(), "USERFLAG", body.getUserFlag(), "appList", body.getAppList());
 
         }
-        else if (jobType.equals("02") || jobType.equals("03")) {
+        else if (RStr.in(jobType, "02", "03")) {
             IF102RspBody body = (IF102RspBody) message.getBody();
             return Collections.asMap("RSP_RESULT", body.getResult(), "appList", body.getAppList());
 
@@ -41,7 +41,7 @@ public class IF1Process extends JCClientProcess {
     }
 
     @Override
-    public JCMessage generateMessage(JCMessageHead head, Map param, JCSession jcSession) {
+    public JCMessage generateMessage(JCMessageHead head, Map param) {
         return null;
     }
 

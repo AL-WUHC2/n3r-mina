@@ -2,38 +2,31 @@ package org.n3r.mina.server;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
-import org.n3r.core.lang.RByte;
+import org.n3r.mina.JCBytesParserFactory;
 import org.n3r.mina.JCHandler;
-import org.n3r.mina.JCSession;
+import org.n3r.mina.listener.JCServerReceiveListener;
+import org.n3r.mina.listener.JCServerSendListener;
+import org.n3r.mina.listener.JCSessionCreateListener;
 
-public abstract class JCServerHandler extends JCHandler {
-
-    public abstract byte[] messageServerProcess(JCSession jcSession, byte[] message) throws Exception;
+public class JCServerHandler extends JCHandler {
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        JCSession jcSession = getSessionInfo(session);
+        byte[] bytes = fetchIoBufferBytes((IoBuffer) message);
 
-        jcSession.pushMessage((IoBuffer) message);
-        byte[] msg = jcSession.popMessage();
+        JCBytesParserFactory parser = getBytesParserFactory(session);
+        parser.parseBytes(bytes);
 
-        while (msg != null) {
-            incrementSessionOrderNo(session);
-            if (msg.length == 0) {
-                session.write(IoBuffer.wrap(RByte.toBytes((short) 0)));
-                return;
-            }
-            if (jcSession.getOrderNo() == 1) jcSessionCreated(jcSession, msg);
-
-            session.write(IoBuffer.wrap(messageServerProcess(jcSession, msg)));
-            msg = jcSession.popMessage();
+        if (parser.getOrderNo() == 1) {
+            parser.removeListener(0);
         }
     }
 
     @Override
-    public void messageSent(IoSession session, Object message) throws Exception {}
-
-    @Override
-    public void sessionCreated(IoSession session) throws Exception {}
+    protected void addListenersToFactory(IoSession session, JCBytesParserFactory parserFactory) {
+        parserFactory.addListener(new JCSessionCreateListener())
+                .addListener(new JCServerReceiveListener(session))
+                .addListener(new JCServerSendListener(session));
+    }
 
 }

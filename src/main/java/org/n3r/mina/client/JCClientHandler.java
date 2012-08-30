@@ -2,57 +2,45 @@ package org.n3r.mina.client;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
-import org.n3r.core.lang.RByte;
-import org.n3r.core.lang3.ArrayUtils;
+import org.n3r.mina.JCBytesParserFactory;
 import org.n3r.mina.JCHandler;
-import org.n3r.mina.JCSession;
+import org.n3r.mina.listener.JCClientReceiveListener;
+import org.n3r.mina.listener.JCClientSendListener;
+import org.n3r.mina.listener.JCSessionCreateListener;
 
-public abstract class JCClientHandler extends JCHandler {
+public class JCClientHandler extends JCHandler {
 
-    public abstract byte[] messageClientProcess(JCSession jcSession, byte[] message) throws Exception;
-
-    private byte[] requestBuffer = new byte[0];
+    private JCBytesParserFactory sendParserFactory = new JCBytesParserFactory();
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        JCSession jcSession = getSessionInfo(session);
+        byte[] bytes = fetchIoBufferBytes((IoBuffer) message);
 
-        jcSession.pushMessage((IoBuffer) message);
-        byte[] msg = jcSession.popMessage();
-
-        while (msg != null) {
-            incrementSessionOrderNo(session);
-            if (msg.length == 0) {
-                session.close(true);
-                return;
-            }
-
-            byte[] bytes = messageClientProcess(jcSession, msg);
-            if (ArrayUtils.isEmpty(bytes)) {
-                session.close(true);
-                return;
-            }
-            session.write(IoBuffer.wrap(bytes));
-            msg = jcSession.popMessage();
-        }
+        getBytesParserFactory(session).parseBytes(bytes);
     }
 
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
-        if (getSessionOrderNo(session) == 0) {
-            JCSession jcSession = getSessionInfo(session);
+        JCBytesParserFactory parser = getBytesParserFactory(session);
 
-            requestBuffer = JCSession.pushMessage(requestBuffer, (IoBuffer) message);
-            byte[] msg = JCSession.popMessage(requestBuffer);
+        if (parser.getOrderNo() == 0) {
+            byte[] bytes = fetchIoBufferBytes((IoBuffer) message);
 
-            if (ArrayUtils.isNotEmpty(msg)) {
-                requestBuffer = RByte.subBytes(requestBuffer, 2 + msg.length);
-                jcSessionCreated(jcSession, msg);
+            sendParserFactory.addListener(new JCSessionCreateListener());
+            sendParserFactory.parseBytes(bytes);
+            sendParserFactory.cleanListeners();
+
+            if (sendParserFactory.getOrderNo() == 1) {
+                sendParserFactory.cleanBuffer();
+                setBytesParserFactory(session, sendParserFactory);
+                addListenersToFactory(session, sendParserFactory);
             }
         }
     }
 
     @Override
-    public void sessionCreated(IoSession session) throws Exception {}
+    protected void addListenersToFactory(IoSession session, JCBytesParserFactory parserFactory) {
+        parserFactory.addListener(new JCClientReceiveListener(session)).addListener(new JCClientSendListener(session));
+    }
 
 }

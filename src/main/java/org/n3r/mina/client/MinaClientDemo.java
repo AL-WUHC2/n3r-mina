@@ -33,7 +33,7 @@ public class MinaClientDemo {
         byte[] subBytes1 = subBytes(bytes, 0, 40);
         byte[] subBytes2 = subBytes(bytes, 40);
         byte[] nullBytes = toBytes((short) 0);
-        MinaClient client = new MinaClient("219.239.243.139", 9002);
+        MinaClient client = new MinaClient("219.239.243.139", 9002, new JCClientHandler());
         client.sendMessage(bytes);
         //        client.sendMessage(subBytes1);
         //        Thread.sleep(10000);

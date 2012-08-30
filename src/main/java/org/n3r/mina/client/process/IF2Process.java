@@ -3,7 +3,6 @@ package org.n3r.mina.client.process;
 import java.util.Map;
 
 import org.n3r.core.lang.RStr;
-import org.n3r.mina.JCSession;
 import org.n3r.mina.bean.JCMessage;
 import org.n3r.mina.bean.JCMessageHead;
 import org.n3r.mina.bean.req.IF2ReqBody;
@@ -20,14 +19,14 @@ public class IF2Process extends JCClientProcess {
     @Override
     public Map fetchInsertParam(JCMessage message) {
         IF2ReqBody body = (IF2ReqBody) message.getBody();
-        return Collections.asMap("RSPDATA", body.getcApdu());
+        return Collections.asMap("RSPDATA", body.getCapdu());
     }
 
     @Override
-    public JCMessage generateMessage(JCMessageHead head, Map param, JCSession jcSession) {
+    public JCMessage generateMessage(JCMessageHead head, Map param) {
         IF2RspBody if2RspBody = new IF2RspBody();
         if2RspBody.setResult(RStr.toStr(param.get("RSP_RESULT")));
-        if2RspBody.setrApdu(RStr.toStr(param.get("RSPDATA")));
+        if2RspBody.setRapdu(RStr.toStr(param.get("RSPDATA")));
         return new JCMessage(head, if2RspBody);
     }
 

@@ -16,7 +16,7 @@ public class MinaServer {
     public static void main(String[] args) throws Exception {
         IoAcceptor acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast("logger", new LoggingFilter());
-        acceptor.setHandler(new MinaServerHandler());
+        acceptor.setHandler(new JCServerHandler());
         acceptor.getSessionConfig().setReadBufferSize(2048);
         int idle = getConfigMgr().getInt("MinaIdleTime", 60);
         acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, idle);

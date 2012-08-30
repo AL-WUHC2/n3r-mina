@@ -48,7 +48,7 @@ public class JCMessageUtilsTest {
                 "{result:0000, merchantName:提供商, enableSpace:001213, userFlag:00, appList:[]}", printer.toString());
 
         actual = subBytes(actual, 2);
-        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.rspMessageFromBytes(actual, "01");
+        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.messageFromBytes(actual, "01", false);
         assertEquals(new JCMessage(head, body), messageFromBytes.getBean());
     }
 
@@ -99,7 +99,7 @@ public class JCMessageUtilsTest {
                 "provider:提供商二, productId:I002, feeDesc:0FFE}]}", printer.toString());
 
         actual = subBytes(actual, 2);
-        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.rspMessageFromBytes(actual, "03");
+        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.messageFromBytes(actual, "03", false);
         assertEquals(new JCMessage(head, body), messageFromBytes.getBean());
     }
 
@@ -121,7 +121,7 @@ public class JCMessageUtilsTest {
         assertEquals("{sessionId:20120813150412345678, typeFlag:00}{result:0000}", printer.toString());
 
         actual = subBytes(actual, 2);
-        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.rspMessageFromBytes(actual, "04");
+        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.messageFromBytes(actual, "04", false);
         assertEquals(new JCMessage(head, body), messageFromBytes.getBean());
     }
 
@@ -145,7 +145,7 @@ public class JCMessageUtilsTest {
         assertEquals("{sessionId:20120813150412345678, typeFlag:03}{}", printer.toString());
 
         actual = subBytes(actual, 2);
-        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.reqMessageFromBytes(actual);
+        ParseBean<JCMessage> messageFromBytes = JCMessageUtils.messageFromBytes(actual, "01", false);
         JCMessage fromMessage = messageFromBytes.getBean();
         assertEquals(head.getSessionId(), fromMessage.getHead().getSessionId());
         assertEquals(body, fromMessage.getBody());
@@ -154,6 +154,8 @@ public class JCMessageUtilsTest {
     @Test
     public void test0() {
         assertNotNull(new JCMessageUtils());
+
+        assertArrayEquals(new byte[0], JCMessageUtils.messageToBytes(null, null));
     }
 
 }

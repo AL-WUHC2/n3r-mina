@@ -141,7 +141,7 @@ public class MinaByterPanel extends JPanel {
 
                     byte[] content = subBytes(bytes, 2, len);
                     ParseBean<JCMessageHead> messageHead = parseMessageHead(content);
-                    String ifNo = JCTypeUtils.getTypeIFString(messageHead.getBean().getTypeFlag());
+                    String ifNo = JCTypeUtils.getMsgTypeIFString(messageHead.getBean().getTypeFlag());
 
                     JCMessage message = null;
                     if (comboTypes.getSelectedItem().equals("ESS侧")) {

@@ -2,14 +2,21 @@
 <!DOCTYPE sqlMap
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-<sqlMap namespace="JCClientSQL">
+<sqlMap namespace="JCListenerSQL">
     <typeAlias alias="HashMap" type="java.util.HashMap"/>
-    <typeAlias alias="AppItem" type="org.n3r.mina.bean.rsp.AppItem"/>
     
-    <select id="getSeq" resultClass="HashMap">
-        SELECT TO_CHAR(SYSDATE,'yymmdd') || JC_RSP_SEQ.NEXTVAL AS "SEQ"
-          FROM DUAL
-    </select>
+    <insert id="insertTestData" parameterClass="HashMap">
+        INSERT INTO JCFACE_SUB
+               (IF_NO,  BATCH_ID,   STAFF_ID,   ORDER_NO,   JOB_TYPE,   STATE,
+                RESP_CONTENT,   SLEEP_TIME,     RESP_IF_NO,     DEFAULT_TAG)
+        VALUES ('IF1',  #BATCH_ID#, #STAFF_ID#, #ORDER_NO#, #JOB_TYPE#, '1',
+                #CONTENT#,      #SLEEP_TIME#,   #RESP_IF_NO#,   #DEFAULT_TAG#)
+    </insert>
+    
+    <delete id="deleteTestData" parameterClass="HashMap">
+        DELETE FROM JCFACE_SUB T
+         WHERE T.BATCH_ID = #BATCH_ID#
+    </delete>
     
     <insert id="insertRspData" parameterClass="HashMap">
         INSERT INTO JC_RSP_DATA (
@@ -34,33 +41,17 @@
                 <isNotNull property="CARD_PRODUCT_NAME">#CARD_PRODUCT_NAME#,</isNotNull>
                 <isNotNull property="USERFLAG">#USERFLAG#,</isNotNull>
                 SYSDATE,
-                '1'
+                #RSP_TYPE#
                )
     </insert>
     
-    <insert id="insertRspSubData" parameterClass="AppItem">
-        INSERT INTO JC_RSP_SUB_DATA (
-                ID,             NAME,       AID,        APPSIZE,    MAYOPERATE,         SUPPLIERNAME,   FEEDESC
-               )
-        VALUES (
-                #productId#,    #appName#,  #appAid#,   #appSize#,  #appOperateType#,   #provider#,     #feeDesc#
-               )
-    </insert>
-    
-    <select id="queryRequestInfo" parameterClass="HashMap" resultClass="HashMap">
-        SELECT T.ID, T.RSPDATA, T.RSP_RESULT
-          FROM JC_RSP_DATA T
+    <delete id="deleteRspData" parameterClass="HashMap">
+        DELETE FROM JC_RSP_DATA T
          WHERE T.SESSIONID = #SESSIONID#
-           AND T.IF_NO = #IF_NO#
-           AND T.STATE = '0'
-           AND T.RSP_TYPE = '0'
-           AND ROWNUM = 1
-    </select>
+    </delete>
     
-    <update id="updateRequestInfoState" parameterClass="HashMap">
-        UPDATE JC_RSP_DATA T
-           SET T.STATE = '1'
-         WHERE T.ID = #ID#
-    </update>
+    <delete id="deleteRspSubData">
+        DELETE FROM JC_RSP_SUB_DATA
+    </delete>
     
 </sqlMap>

@@ -2,7 +2,6 @@ package org.n3r.mina.client.process;
 
 import java.util.Map;
 
-import org.n3r.mina.JCSession;
 import org.n3r.mina.bean.JCMessage;
 import org.n3r.mina.bean.JCMessageHead;
 import org.n3r.mina.bean.req.IF3ReqBody;
@@ -23,12 +22,12 @@ public class IF3Process extends JCClientProcess {
     }
 
     @Override
-    protected Map queryRequestInfo(Map insertParam) throws Exception {
+    protected Map queryClientMessage(Map insertParam) throws Exception {
         return null;
     }
 
     @Override
-    public JCMessage generateMessage(JCMessageHead head, Map param, JCSession jcSession) {
+    public JCMessage generateMessage(JCMessageHead head, Map param) {
         IF3RspBody if3RspBody = new IF3RspBody();;
         if3RspBody.setResult("0000");
         return new JCMessage(head, if3RspBody);
