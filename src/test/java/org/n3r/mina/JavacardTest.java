@@ -40,7 +40,7 @@ public class JavacardTest {
                 "CONTENT", "{\"capdu\":\"0123456789ABCDEF\"}", "SLEEP_TIME", 1000, "RESP_IF_NO", "IF2"));
         dao.insert("JCListenerSQL.insertTestData", Collections.asMap(
                 "BATCH_ID", "87654321", "STAFF_ID", "999001", "ORDER_NO", 2, "JOB_TYPE", 1, "DEFAULT_TAG", "1",
-                "CONTENT", "{\"result\":\"0000\",\"merchantName\":\"提供商\",\"enableSpace\":\"000011\"," +
+                "CONTENT", "{\"result\":\"0000\",\"merchantName\":\"提供商\",\"enableSpace\":\"00000011\"," +
                         "\"userFlag\":\"01\",\"appList\":[{\"appName\":\"应用名\",\"appAid\":\"999001\"," +
                         "\"appSize\":\"0011\",\"appOperateType\":\"01\",\"provider\":\"提供者\"," +
                         "\"productId\":\"340199999001\",\"feeDesc\":\"\"}]}",

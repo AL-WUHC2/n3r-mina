@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
+import org.n3r.core.lang.RHex;
 import org.n3r.core.lang.RStr;
 import org.n3r.mina.JCBytesParserFactory;
 import org.n3r.mina.JCMessageListener;
@@ -68,7 +69,10 @@ public class JCServerSendListener extends JCMessageListener {
 
         StringBuilder printer = new StringBuilder();
         byte[] result = JCMessageUtils.messageToBytes(head, body, printer);
+        logger.info("--------------------------------------------------");
         logger.info("[Server Send Message]: " + printer.toString());
+        logger.info("[Server Send Bytes]: " + RHex.encode(result));
+        logger.info("--------------------------------------------------");
 
         if (session != null && !session.isClosing()) {
             session.write(IoBuffer.wrap(result));

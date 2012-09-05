@@ -1,5 +1,7 @@
 package org.n3r.mina.listener;
 
+import org.n3r.beanbytes.utils.BeanBytesUtils;
+import org.n3r.core.lang.RHex;
 import org.n3r.mina.JCBytesParserFactory;
 import org.n3r.mina.JCMessageListener;
 import org.n3r.mina.bean.JCMessage;
@@ -12,9 +14,14 @@ public class JCSessionCreateListener extends JCMessageListener {
 
     @Override
     public Object process(Object message, JCBytesParserFactory parser) throws Exception {
-        JCMessage bean = JCMessageUtils.messageFromBytes((byte[]) message, "", true).getBean();
+        logger.info("--------------------------------------------------");
+        byte[] bytes = (byte[]) message;
+        logger.info("[Session Created Bytes]: " + RHex.encode(BeanBytesUtils.prependLen(bytes, 2)));
+
+        JCMessage bean = JCMessageUtils.messageFromBytes(bytes, "", true).getBean();
 
         logger.info("[Session Created Message]: " + JSON.toJSONString(bean));
+        logger.info("--------------------------------------------------");
 
         parser.setSessionId(bean.getHead().getSessionId());
 
@@ -24,5 +31,4 @@ public class JCSessionCreateListener extends JCMessageListener {
 
         return message;
     }
-
 }

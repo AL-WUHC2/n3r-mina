@@ -25,7 +25,8 @@ public class IF1Process extends JCClientProcess {
         if (jobType.equals("01")) {
             IF101RspBody body = (IF101RspBody) message.getBody();
             return Collections.asMap("RSP_RESULT", body.getResult(), "CARD_PRODUCT_NAME",
-                    body.getMerchantName(), "USERFLAG", body.getUserFlag(), "appList", body.getAppList());
+                    body.getMerchantName(), "ENABLE_SPACE", body.getEnableSpace(), "USERFLAG", body.getUserFlag(),
+                    "appList", body.getAppList());
 
         }
         else if (RStr.in(jobType, "02", "03")) {

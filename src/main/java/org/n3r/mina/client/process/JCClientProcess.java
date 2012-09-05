@@ -18,6 +18,10 @@ import static org.phw.config.impl.PhwConfigMgrFactory.*;
 
 public abstract class JCClientProcess {
 
+    private static final int IDLE_TIME = getConfigMgr().getInt("MinaIdleTime", 60);
+
+    private static final int QUERY_TIME = getConfigMgr().getInt("MinaQueryTime", 1000);
+
     private PDao dao;
 
     protected String ifNo;
@@ -73,9 +77,9 @@ public abstract class JCClientProcess {
 
     protected Map queryClientMessage(Map insertParam) throws Exception {
         Map requestInfo = dao.selectMap("JCClientSQL.queryRequestInfo", insertParam);
-        int idle = getConfigMgr().getInt("MinaIdleTime", 60) / 5;
+        int idle = IDLE_TIME / (QUERY_TIME / 1000);
         for (int i = 0; Collections.isEmpty(requestInfo) && i < idle; i++) {
-            Thread.sleep(5000);
+            Thread.sleep(QUERY_TIME);
             requestInfo = dao.selectMap("JCClientSQL.queryRequestInfo", insertParam);
         }
         if (Collections.isEmpty(requestInfo)) throw new Exception("Cannot query Response Message!");

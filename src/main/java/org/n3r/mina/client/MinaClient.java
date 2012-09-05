@@ -5,10 +5,15 @@ import java.net.InetSocketAddress;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoHandler;
+import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
+import static org.phw.config.impl.PhwConfigMgrFactory.*;
+
 public class MinaClient {
+
+    private static final int IDLE_TIME = getConfigMgr().getInt("MinaIdleTime", 60);
 
     private ConnectFuture cf = null;
 
@@ -19,6 +24,7 @@ public class MinaClient {
         connector.getFilterChain().addLast("logger", new LoggingFilter());
         connector.setConnectTimeoutMillis(1000);
         connector.setHandler(handler);
+        connector.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, IDLE_TIME);
         cf = connector.connect(new InetSocketAddress(address, port));
         cf.awaitUninterruptibly();
     }

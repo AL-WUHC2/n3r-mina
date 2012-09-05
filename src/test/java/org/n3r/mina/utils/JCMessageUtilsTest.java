@@ -31,7 +31,7 @@ public class JCMessageUtilsTest {
         IF101RspBody body = new IF101RspBody();
         body.setResult("0000");
         body.setMerchantName("提供商");
-        body.setEnableSpace("001213");
+        body.setEnableSpace("00001213");
         body.setUserFlag("00");
         body.setAppList(new ArrayList<AppItem>());
         StringBuilder printer = new StringBuilder();
@@ -39,13 +39,13 @@ public class JCMessageUtilsTest {
         byte[] actual = JCMessageUtils.messageToBytes(new JCMessage(head, body), printer);
 
         byte[] expected = add(toBytes("20120813150412345678"), toBytes((byte) 0),
-                toBytes((short) 0), prependLen(toBytes("提供商", "UTF-16LE"), 1),
-                RHex.decode("001213"), RHex.decode("00"), toBytes((short) 0));
+                toBytes((short) 0), prependLen(toBytes("提供商", "Unicode"), 1),
+                RHex.decode("00001213"), RHex.decode("00"), toBytes((short) 0));
         expected = BeanBytesUtils.prependLen(expected, 2);
 
         assertArrayEquals(expected, actual);
         assertEquals("{sessionId:20120813150412345678, typeFlag:00}" +
-                "{result:0000, merchantName:提供商, enableSpace:001213, userFlag:00, appList:[]}", printer.toString());
+                "{result:0000, merchantName:提供商, enableSpace:00001213, userFlag:00, appList:[]}", printer.toString());
 
         actual = subBytes(actual, 2);
         ParseBean<JCMessage> messageFromBytes = JCMessageUtils.messageFromBytes(actual, "01", false);
@@ -82,11 +82,11 @@ public class JCMessageUtilsTest {
         byte[] actual = JCMessageUtils.messageToBytes(new JCMessage(head, body), printer);
 
         byte[] expected = add(toBytes("20120813150412345678"), toBytes((byte) 0), toBytes((short) 0));
-        byte[] app1Bytes = add(prependLen(toBytes("应用一", "UTF-16LE"), 1), prependLen(RHex.decode("10000001"), 1),
-                RHex.decode("0011"), RHex.decode("80"), prependLen(toBytes("提供商一", "UTF-16LE"), 1),
+        byte[] app1Bytes = add(prependLen(toBytes("应用一", "Unicode"), 1), prependLen(RHex.decode("10000001"), 1),
+                RHex.decode("0011"), RHex.decode("80"), prependLen(toBytes("提供商一", "Unicode"), 1),
                 prependLen(toBytes("I001"), 1), prependLen(RHex.decode("0FFD"), 1));
-        byte[] app2Bytes = add(prependLen(toBytes("应用二", "UTF-16LE"), 1), prependLen(RHex.decode("10000002"), 1),
-                RHex.decode("0022"), RHex.decode("08"), prependLen(toBytes("提供商二", "UTF-16LE"), 1),
+        byte[] app2Bytes = add(prependLen(toBytes("应用二", "Unicode"), 1), prependLen(RHex.decode("10000002"), 1),
+                RHex.decode("0022"), RHex.decode("08"), prependLen(toBytes("提供商二", "Unicode"), 1),
                 prependLen(toBytes("I002"), 1), prependLen(RHex.decode("0FFE"), 1));
         expected = add(expected, prependLen(add(app1Bytes, app2Bytes), 2, 2));
         expected = BeanBytesUtils.prependLen(expected, 2);

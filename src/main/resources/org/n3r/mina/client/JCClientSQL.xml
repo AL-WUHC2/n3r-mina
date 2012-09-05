@@ -20,6 +20,7 @@
                 IF_NO,
                 <isNotNull property="RSP_RESULT">RSP_RESULT,</isNotNull>
                 <isNotNull property="CARD_PRODUCT_NAME">CARD_PRODUCT_NAME,</isNotNull>
+                <isNotNull property="ENABLE_SPACE">ENABLE_SPACE,</isNotNull>
                 <isNotNull property="USERFLAG">USERFLAG,</isNotNull>
                 UPDATE_TIME,
                 RSP_TYPE
@@ -32,6 +33,7 @@
                 #IF_NO#,
                 <isNotNull property="RSP_RESULT">#RSP_RESULT#,</isNotNull>
                 <isNotNull property="CARD_PRODUCT_NAME">#CARD_PRODUCT_NAME#,</isNotNull>
+                <isNotNull property="ENABLE_SPACE">#ENABLE_SPACE#,</isNotNull>
                 <isNotNull property="USERFLAG">#USERFLAG#,</isNotNull>
                 SYSDATE,
                 '1'
