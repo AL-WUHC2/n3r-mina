@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.n3r</groupId>
     <artifactId>n3r-mina</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.6</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.mina</groupId>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.n3r</groupId>
             <artifactId>n3r-beanbytes</artifactId>
-            <version>0.0.4</version>
+            <version>0.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.phw</groupId>

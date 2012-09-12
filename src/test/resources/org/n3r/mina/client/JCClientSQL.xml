@@ -40,12 +40,12 @@
                )
     </insert>
     
-    <insert id="insertRspSubData" parameterClass="AppItem">
+    <insert id="insertRspSubData" parameterClass="HashMap">
         INSERT INTO JC_RSP_SUB_DATA (
-                ID,             NAME,       AID,        APPSIZE,    MAYOPERATE,         SUPPLIERNAME,   FEEDESC
+                ID,     NAME,       AID,        APPSIZE,    MAYOPERATE,         SUPPLIERNAME,   FEEDESC,    PRODUCT_ID
                )
         VALUES (
-                #productId#,    #appName#,  #appAid#,   #appSize#,  #appOperateType#,   #provider#,     #feeDesc#
+                #ID#,   #appName#,  #appAid#,   #appSize#,  #appOperateType#,   #provider#,     #feeDesc#,  #productId#
                )
     </insert>
     

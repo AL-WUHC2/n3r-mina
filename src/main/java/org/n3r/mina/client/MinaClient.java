@@ -8,12 +8,11 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-
-import static org.phw.config.impl.PhwConfigMgrFactory.*;
+import org.n3r.config.Config;
 
 public class MinaClient {
 
-    private static final int IDLE_TIME = getConfigMgr().getInt("MinaIdleTime", 60);
+    private static final int IDLE_TIME = Config.getInt("MinaIdleTime", 60);
 
     private ConnectFuture cf = null;
 

@@ -6,14 +6,13 @@ import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-
-import static org.phw.config.impl.PhwConfigMgrFactory.*;
+import org.n3r.config.Config;
 
 public class MinaServer {
 
-    private static final int IDLE_TIME = getConfigMgr().getInt("MinaIdleTime", 60);
+    private static final int IDLE_TIME = Config.getInt("MinaIdleTime", 60);
 
-    private static final int PORT = getConfigMgr().getInt("MinaServerPort", 9123);
+    private static final int PORT = Config.getInt("MinaServerPort", 9123);
 
     public static void main(String[] args) throws Exception {
         IoAcceptor acceptor = new NioSocketAcceptor();

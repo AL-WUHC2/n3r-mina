@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.n3r.core.lang.RBean;
 import org.n3r.mina.JCBytesParserFactory;
 import org.n3r.mina.bean.JCMessage;
 import org.n3r.mina.bean.JCMessageHead;
@@ -59,15 +60,17 @@ public abstract class JCClientProcess {
         boolean transactionStart = false;
         try {
             transactionStart = dao.tryStart();
-            //            dao.startBatch();
+            dao.startBatch();
             dao.insert("JCClientSQL.insertRspData", insertParam);
             List<AppItem> insertAppList = (List<AppItem>) insertParam.get("appList");
             if (!Collections.isEmpty(insertAppList)) {
                 for (AppItem app : insertAppList) {
-                    dao.insert("JCClientSQL.insertRspSubData", app);
+                    Map appMap = RBean.beanToMap(app);
+                    appMap.put("ID", insertParam.get("ID"));
+                    dao.insert("JCClientSQL.insertRspSubData", appMap);
                 }
             }
-            //            dao.executeBatch();
+            dao.executeBatch();
             dao.commit(transactionStart);
         }
         finally {
